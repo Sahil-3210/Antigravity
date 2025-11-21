@@ -3,6 +3,7 @@ import { Toaster } from 'react-hot-toast'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
+import LandingPage from './pages/LandingPage'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import EmployeeDashboard from './pages/employee/EmployeeDashboard'
 import SkillAssessment from './pages/employee/SkillAssessment'
@@ -61,12 +62,13 @@ function App() {
       />
       <Router>
         <Routes>
+          <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
 
           <Route element={<ProtectedRoute allowedRoles={['admin', 'employee']} />}>
             <Route element={<Layout />}>
-              <Route path="/" element={<DashboardRouter />} />
+              <Route path="/dashboard" element={<DashboardRouter />} />
 
               {/* Admin Routes */}
               <Route path="/admin/employees" element={<EmployeeList />} />

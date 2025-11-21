@@ -26,13 +26,18 @@ export default function Login() {
     }
 
     return (
-        <div
-            className="flex min-h-screen items-center justify-center bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: "url('/bg-office.png')" }}
-        >
-            <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"></div>
+        <div className="min-h-screen bg-white flex items-center justify-center relative overflow-hidden">
+            {/* Background Pattern */}
+            <div className="absolute inset-0 z-0">
+                <img
+                    src="/hero-bg.png"
+                    alt="Office Background"
+                    className="w-full h-full object-cover opacity-10"
+                />
+                <div className="absolute inset-0 bg-linear-to-b from-white/0 via-white/50 to-white"></div>
+            </div>
 
-            <div className="relative w-full max-w-md rounded-xl bg-white/90 p-8 shadow-2xl backdrop-blur-xl border border-white/20">
+            <div className="relative z-10 w-full max-w-md rounded-2xl bg-white/80 p-8 shadow-xl backdrop-blur-xl border border-white/50">
                 <div className="mb-8 text-center">
                     <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Welcome Back</h1>
                     <p className="mt-2 text-sm text-gray-600">Sign in to access your professional dashboard</p>
