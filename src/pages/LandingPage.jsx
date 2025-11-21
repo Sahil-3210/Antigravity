@@ -1,34 +1,11 @@
 import { Link } from 'react-router-dom'
-import { ArrowRight, CheckCircle, BarChart, Users, BookOpen, Shield } from 'lucide-react'
+import { ArrowRight, Shield } from 'lucide-react'
+import Navbar from '../components/Navbar'
 
 export default function LandingPage() {
     return (
         <div className="min-h-screen bg-white">
-            {/* Navigation */}
-            <nav className="fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between items-center h-20">
-                        <a href="#home" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                            <div className="bg-blue-600 p-2 rounded-lg">
-                                <Shield className="h-6 w-6 text-white" />
-                            </div>
-                            <span className="text-xl font-bold text-gray-900 tracking-tight">Competency<span className="text-blue-600">Manager</span></span>
-                        </a>
-                        <div className="hidden md:flex items-center space-x-8">
-                            <a href="#home" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">Home</a>
-                            <a href="#features" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">Features</a>
-                            <a href="#about" className="text-gray-600 hover:text-blue-600 font-medium transition-colors">About</a>
-                            <Link to="/login" className="text-gray-900 font-semibold hover:text-blue-600 transition-colors">Sign In</Link>
-                            <Link
-                                to="/signup"
-                                className="bg-blue-600 text-white px-5 py-2.5 rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/30 hover:shadow-blue-500/40"
-                            >
-                                Get Started
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-            </nav>
+            <Navbar />
 
             {/* Hero Section */}
             <div id="home" className="relative pt-24 pb-16 lg:pt-32 lg:pb-24 overflow-hidden">
@@ -73,73 +50,6 @@ export default function LandingPage() {
                         <div className="font-bold text-xl">GlobalTech</div>
                         <div className="font-bold text-xl">InnovateLabs</div>
                         <div className="font-bold text-xl">FutureSystems</div>
-                    </div>
-                </div>
-            </div>
-
-            {/* About Section */}
-            <div id="about" className="py-24 bg-white border-b border-gray-50">
-                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <h2 className="text-blue-600 font-semibold tracking-wide uppercase text-sm mb-3">About Us</h2>
-                    <h3 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight mb-6">
-                        Empowering organizations to build world-class teams.
-                    </h3>
-                    <p className="text-lg text-gray-600 mb-10 leading-relaxed">
-                        We believe that every employee deserves a clear path to growth. Our platform bridges the gap between current skills and future potential, enabling data-driven decisions for promotions, hiring, and development.
-                    </p>
-                    <div className="flex flex-wrap justify-center gap-8 md:gap-16">
-                        <div className="flex flex-col items-center">
-                            <span className="text-4xl font-bold text-blue-600">500+</span>
-                            <span className="text-sm text-gray-500 mt-1">Companies</span>
-                        </div>
-                        <div className="hidden md:block w-px bg-gray-200 h-16"></div>
-                        <div className="flex flex-col items-center">
-                            <span className="text-4xl font-bold text-blue-600">10k+</span>
-                            <span className="text-sm text-gray-500 mt-1">Assessments</span>
-                        </div>
-                        <div className="hidden md:block w-px bg-gray-200 h-16"></div>
-                        <div className="flex flex-col items-center">
-                            <span className="text-4xl font-bold text-blue-600">98%</span>
-                            <span className="text-sm text-gray-500 mt-1">Satisfaction</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Features Section */}
-            <div id="features" className="py-24 bg-gray-50">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="text-center mb-16">
-                        <h2 className="text-blue-600 font-semibold tracking-wide uppercase text-sm mb-3">Features</h2>
-                        <h3 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight">Everything you need to manage talent</h3>
-                    </div>
-
-                    <div className="grid md:grid-cols-3 gap-8">
-                        {[
-                            {
-                                icon: BarChart,
-                                title: "Skill Assessments",
-                                desc: "Automated testing and validation of employee skills with instant feedback and scoring."
-                            },
-                            {
-                                icon: BookOpen,
-                                title: "Learning Paths",
-                                desc: "Personalized development plans generated automatically based on skill gaps."
-                            },
-                            {
-                                icon: Users,
-                                title: "Role Management",
-                                desc: "Define clear career ladders and requirements for every role in your organization."
-                            }
-                        ].map((feature, i) => (
-                            <div key={i} className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 hover:shadow-md transition-all hover:-translate-y-1">
-                                <div className="h-14 w-14 bg-blue-50 rounded-2xl flex items-center justify-center mb-6 text-blue-600">
-                                    <feature.icon className="h-7 w-7" />
-                                </div>
-                                <h4 className="text-xl font-bold text-gray-900 mb-3">{feature.title}</h4>
-                                <p className="text-gray-600 leading-relaxed">{feature.desc}</p>
-                            </div>
-                        ))}
                     </div>
                 </div>
             </div>

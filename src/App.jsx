@@ -3,6 +3,8 @@ import { Toaster } from 'react-hot-toast'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
+import AboutPage from './pages/AboutPage'
+import FeaturesPage from './pages/FeaturesPage'
 import LandingPage from './pages/LandingPage'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import EmployeeDashboard from './pages/employee/EmployeeDashboard'
@@ -63,6 +65,8 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/features" element={<FeaturesPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
 
