@@ -17,7 +17,7 @@ export default function Login() {
             const { error } = await signIn({ email, password })
             if (error) throw error
             toast.success('Welcome back!')
-            navigate('/')
+            navigate('/dashboard')
         } catch (error) {
             toast.error('Failed to sign in. Please check your credentials.')
         } finally {

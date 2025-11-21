@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { supabase } from '../../lib/supabase'
 import { Users, TrendingUp, Briefcase, CheckCircle } from 'lucide-react'
@@ -115,7 +116,7 @@ export default function AdminDashboard() {
                         <h3 className="text-lg font-semibold text-gray-900">Quick Actions</h3>
                     </div>
                     <div className="grid grid-cols-1 gap-4">
-                        <a href="/admin/employees" className="group flex items-center justify-between rounded-xl border border-gray-200 p-4 hover:border-blue-500 hover:ring-1 hover:ring-blue-500 transition-all">
+                        <Link to="/admin/employees" className="group flex items-center justify-between rounded-xl border border-gray-200 p-4 hover:border-blue-500 hover:ring-1 hover:ring-blue-500 transition-all">
                             <div className="flex items-center gap-4">
                                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50">
                                     <Users className="h-5 w-5 text-blue-600" />
@@ -128,8 +129,8 @@ export default function AdminDashboard() {
                             <div className="text-blue-600 opacity-0 transition-opacity group-hover:opacity-100">
                                 &rarr;
                             </div>
-                        </a>
-                        <a href="/admin/promotions" className="group flex items-center justify-between rounded-xl border border-gray-200 p-4 hover:border-blue-500 hover:ring-1 hover:ring-blue-500 transition-all">
+                        </Link>
+                        <Link to="/admin/promotions" className="group flex items-center justify-between rounded-xl border border-gray-200 p-4 hover:border-blue-500 hover:ring-1 hover:ring-blue-500 transition-all">
                             <div className="flex items-center gap-4">
                                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-50">
                                     <TrendingUp className="h-5 w-5 text-amber-600" />
@@ -142,7 +143,7 @@ export default function AdminDashboard() {
                             <div className="text-blue-600 opacity-0 transition-opacity group-hover:opacity-100">
                                 &rarr;
                             </div>
-                        </a>
+                        </Link>
                     </div>
                 </div>
 

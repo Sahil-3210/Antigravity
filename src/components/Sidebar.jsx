@@ -16,14 +16,14 @@ export default function Sidebar() {
     const location = useLocation()
 
     const adminLinks = [
-        { name: 'Dashboard', path: '/', icon: LayoutDashboard },
+        { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
         { name: 'Employees', path: '/admin/employees', icon: Users },
         { name: 'Roles & Skills', path: '/admin/roles', icon: Settings },
         { name: 'Promotions', path: '/admin/promotions', icon: TrendingUp },
     ]
 
     const employeeLinks = [
-        { name: 'Dashboard', path: '/', icon: LayoutDashboard },
+        { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
         { name: 'My Skills', path: '/employee/skills', icon: Award },
         { name: 'Learning Path', path: '/employee/learning', icon: BookOpen },
         { name: 'Tests', path: '/employee/tests', icon: BookOpen },
