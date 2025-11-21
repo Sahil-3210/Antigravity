@@ -79,66 +79,28 @@ export default function LandingPage() {
 
             {/* About Section */}
             <div id="about" className="py-24 bg-white border-b border-gray-50">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid md:grid-cols-2 gap-16 items-center">
-                        <div>
-                            <h2 className="text-blue-600 font-semibold tracking-wide uppercase text-sm mb-3">About Us</h2>
-                            <h3 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight mb-6">
-                                Empowering organizations to build world-class teams.
-                            </h3>
-                            <p className="text-lg text-gray-600 mb-6 leading-relaxed">
-                                We believe that every employee deserves a clear path to growth. Our platform bridges the gap between current skills and future potential, enabling data-driven decisions for promotions, hiring, and development.
-                            </p>
-                            <div className="flex gap-4">
-                                <div className="flex flex-col">
-                                    <span className="text-3xl font-bold text-blue-600">500+</span>
-                                    <span className="text-sm text-gray-500">Companies</span>
-                                </div>
-                                <div className="w-px bg-gray-200 h-12"></div>
-                                <div className="flex flex-col">
-                                    <span className="text-3xl font-bold text-blue-600">10k+</span>
-                                    <span className="text-sm text-gray-500">Assessments</span>
-                                </div>
-                                <div className="w-px bg-gray-200 h-12"></div>
-                                <div className="flex flex-col">
-                                    <span className="text-3xl font-bold text-blue-600">98%</span>
-                                    <span className="text-sm text-gray-500">Satisfaction</span>
-                                </div>
-                            </div>
+                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                    <h2 className="text-blue-600 font-semibold tracking-wide uppercase text-sm mb-3">About Us</h2>
+                    <h3 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight mb-6">
+                        Empowering organizations to build world-class teams.
+                    </h3>
+                    <p className="text-lg text-gray-600 mb-10 leading-relaxed">
+                        We believe that every employee deserves a clear path to growth. Our platform bridges the gap between current skills and future potential, enabling data-driven decisions for promotions, hiring, and development.
+                    </p>
+                    <div className="flex flex-wrap justify-center gap-8 md:gap-16">
+                        <div className="flex flex-col items-center">
+                            <span className="text-4xl font-bold text-blue-600">500+</span>
+                            <span className="text-sm text-gray-500 mt-1">Companies</span>
                         </div>
-                        <div className="relative">
-                            <div className="absolute inset-0 bg-blue-600 rounded-3xl rotate-3 opacity-10"></div>
-                            <div className="relative bg-gray-50 p-8 rounded-3xl border border-gray-100">
-                                <div className="space-y-6">
-                                    <div className="flex items-start gap-4">
-                                        <div className="bg-green-100 p-2 rounded-lg shrink-0">
-                                            <CheckCircle className="h-6 w-6 text-green-600" />
-                                        </div>
-                                        <div>
-                                            <h4 className="font-bold text-gray-900">Transparent Growth</h4>
-                                            <p className="text-sm text-gray-600 mt-1">Employees know exactly what is needed to reach the next level.</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start gap-4">
-                                        <div className="bg-purple-100 p-2 rounded-lg shrink-0">
-                                            <CheckCircle className="h-6 w-6 text-purple-600" />
-                                        </div>
-                                        <div>
-                                            <h4 className="font-bold text-gray-900">Unbiased Promotions</h4>
-                                            <p className="text-sm text-gray-600 mt-1">Decisions based on verified skills, not just tenure or opinion.</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start gap-4">
-                                        <div className="bg-orange-100 p-2 rounded-lg shrink-0">
-                                            <CheckCircle className="h-6 w-6 text-orange-600" />
-                                        </div>
-                                        <div>
-                                            <h4 className="font-bold text-gray-900">Continuous Learning</h4>
-                                            <p className="text-sm text-gray-600 mt-1">Integrated learning paths keep skills sharp and relevant.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div className="hidden md:block w-px bg-gray-200 h-16"></div>
+                        <div className="flex flex-col items-center">
+                            <span className="text-4xl font-bold text-blue-600">10k+</span>
+                            <span className="text-sm text-gray-500 mt-1">Assessments</span>
+                        </div>
+                        <div className="hidden md:block w-px bg-gray-200 h-16"></div>
+                        <div className="flex flex-col items-center">
+                            <span className="text-4xl font-bold text-blue-600">98%</span>
+                            <span className="text-sm text-gray-500 mt-1">Satisfaction</span>
                         </div>
                     </div>
                 </div>
