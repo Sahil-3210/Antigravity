@@ -2,19 +2,19 @@ pipeline {
     agent any
 
     environment {
-        // Credentials IDs to be created in Jenkins
-        NEXUS_CREDENTIALS_ID = 'nexus-credentials' 
-        SONAR_TOKEN_ID = 'sonar-token'
+        // --- CREDENTIALS (Looking good!) ---
+        NEXUS_CREDENTIALS_ID = 'nexus-credentials-sahilrandive' 
+        SONAR_TOKEN_ID = 'sonar-token-sahilrandive'
         
-        // Remote Infrastructure URLs
+        // --- REMOTE URLS ---
         SONAR_HOST_URL = 'http://sonarqube.imcc.com/'
-        // Registry Host for Docker tagging (no protocol)
         NEXUS_REGISTRY = 'nexus.imcc.com' 
-        // URL for other API interactions if needed (optional)
         NEXUS_URL = 'http://nexus.imcc.com'
+        NEXUS_REPO = 'docker-hosted'
         
-        NEXUS_REPO = 'docker-hosted' // Ensure this repo exists in Nexus
-        IMAGE_NAME = 'anti-react-app'
+        // --- CRITICAL FIX: UNIQUE APP NAME ---
+        // I updated this to include your name so you have your own Docker image
+        IMAGE_NAME = 'anti-react-app-sahilrandive'
         TAG = "${env.BUILD_NUMBER}"
     }
 
@@ -33,9 +33,9 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv(installationName: 'SonarQube') { // Name of SonarQube server in Jenkins config
-                    // Use npx to run scanner without global installation
-                    sh 'npx sonarqube-scanner -Dsonar.projectKey=anti-react-app -Dsonar.sources=src -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.login=$SONAR_AUTH_TOKEN'
+                withSonarQubeEnv(installationName: 'SonarQube') { 
+                    // I updated this line to use your unique ${IMAGE_NAME} variable
+                    sh "npx sonarqube-scanner -Dsonar.projectKey=${IMAGE_NAME} -Dsonar.sources=src -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.login=\$SONAR_AUTH_TOKEN"
                 }
             }
         }
@@ -55,12 +55,7 @@ pipeline {
                         // Login to the registry
                         sh "docker login -u ${NEXUS_USER} -p ${NEXUS_PASS} ${NEXUS_REGISTRY}"
                         
-                        // Tag the image with the registry path
-                        // Format: registry-host/repository-name/image-name:tag
-                        // Note: Nexus docker repo paths often include the port or are mapped by port. 
-                        // Assuming 'nexus.imcc.com' resolves to the registry or is behind a proxy handling /repository/ path.
-                        // Standard Nexus Docker path: <nexus-hostname>:<docker-port>/<image>:<tag> OR <nexus-hostname>/repository/<repo-name>/<image>:<tag>
-                        // Based on previous file, it used /repository/ path style.
+                        // Tag the image
                         sh "docker tag ${IMAGE_NAME}:${TAG} ${NEXUS_REGISTRY}/repository/${NEXUS_REPO}/${IMAGE_NAME}:${TAG}"
                         
                         // Push the image
