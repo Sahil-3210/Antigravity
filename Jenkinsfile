@@ -17,50 +17,40 @@ pipeline {
     }
 
     stages {
-        // STAGE 1: Prepare, Build, and Scan (Running inside a temporary Node container)
-        stage('Build & SonarQube') {
+        stage('Full Pipeline') {
             steps {
-                script {
-                    // We pull a Node image temporarily to run npm commands
-                    docker.image('node:20-alpine').inside {
-                        // 1. Install Dependencies
-                        sh 'npm install'
+                // CRITICAL FIX: Run everything inside the 'dind' container
+                // This container has Docker pre-installed.
+                container('dind') {
+                    script {
+                        // 1. Install Node.js & NPM manually inside this container
+                        // (The 'dind' image is Alpine Linux, so we use apk)
+                        sh 'apk add --no-cache nodejs npm'
                         
-                        // 2. Build the App
+                        // 2. Install Dependencies & Build
+                        sh 'npm install'
                         sh 'npm run build'
                         
-                        // 3. Run SonarQube Scanner (needs Node to run)
+                        // 3. Run SonarQube Scanner
                         withSonarQubeEnv(installationName: 'SonarQube') { 
                             sh "npx sonarqube-scanner -Dsonar.projectKey=${IMAGE_NAME} -Dsonar.sources=src -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.login=\$SONAR_AUTH_TOKEN"
                         }
-                    }
-                }
-            }
-        }
 
-        // STAGE 2: Build Docker Image (Running on the main Agent)
-        stage('Docker Build') {
-            steps {
-                script {
-                    // Build the actual container for deployment
-                    dockerImage = docker.build("${IMAGE_NAME}:${TAG}")
-                }
-            }
-        }
+                        // 4. Docker Build
+                        // We are already inside the dind container, so 'docker' commands work directly
+                        dockerImage = docker.build("${IMAGE_NAME}:${TAG}")
 
-        // STAGE 3: Push to Nexus
-        stage('Push to Nexus') {
-            steps {
-                script {
-                    withCredentials([usernamePassword(credentialsId: NEXUS_CREDENTIALS_ID, usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASS')]) {
-                        // Login
-                        sh "docker login -u ${NEXUS_USER} -p ${NEXUS_PASS} ${NEXUS_REGISTRY}"
-                        
-                        // Tag
-                        sh "docker tag ${IMAGE_NAME}:${TAG} ${NEXUS_REGISTRY}/repository/${NEXUS_REPO}/${IMAGE_NAME}:${TAG}"
-                        
-                        // Push
-                        sh "docker push ${NEXUS_REGISTRY}/repository/${NEXUS_REPO}/${IMAGE_NAME}:${TAG}"
+                        // 5. Push to Nexus
+                        withCredentials([usernamePassword(credentialsId: NEXUS_CREDENTIALS_ID, usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASS')]) {
+                            // Login
+                            sh "docker login -u ${NEXUS_USER} -p ${NEXUS_PASS} ${NEXUS_REGISTRY}"
+                            
+                            // Tag
+                            sh "docker tag ${IMAGE_NAME}:${TAG} ${NEXUS_REGISTRY}/repository/${NEXUS_REPO}/${IMAGE_NAME}:${TAG}"
+                            
+                            // Push
+                            sh "docker push ${NEXUS_REGISTRY}/repository/${NEXUS_REPO}/${IMAGE_NAME}:${TAG}"
+                        }
                     }
                 }
             }
