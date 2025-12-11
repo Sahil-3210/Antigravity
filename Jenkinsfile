@@ -120,6 +120,9 @@ spec:
                     script {
                         dir('k8s-deployment') {
                             sh '''
+                                # Create namespace if not exists
+                                kubectl create namespace 2401167 --dry-run=client -o yaml | kubectl apply -f -
+                                
                                 # Apply all resources in deployment YAML
                                 kubectl apply -f anti-deployment.yaml
 
