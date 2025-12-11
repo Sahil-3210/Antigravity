@@ -82,7 +82,7 @@ spec:
                     sh '''
                         sonar-scanner \
                             -Dsonar.projectKey=2401167_anti \
-                            -Dsonar.host.url=http://sonarqube.imcc.com \
+                            -Dsonar.host.url=http://my-sonarqube-sonarqube.sonarqube.svc.cluster.local:9000 \
                             -Dsonar.login=student \
                             -Dsonar.password=Imccstudent@2025 \
                             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
@@ -99,7 +99,7 @@ spec:
                 container('dind') {
                     sh 'docker --version'
                     sh 'sleep 10'
-                    sh 'docker login nexus.imcc.com -u student -p Imcc@2025'
+                    sh 'docker login nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085 -u student -p Imcc@2025'
                 }
             }
         }
@@ -107,8 +107,8 @@ spec:
         stage('Build - Tag - Push') {
             steps {
                 container('dind') {
-                    sh 'docker tag anti:latest nexus.imcc.com/2401167-project/anti:latest'
-                    sh 'docker push nexus.imcc.com/2401167-project/anti:latest'
+                    sh 'docker tag anti:latest nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085/2401167-project/anti:latest'
+                    sh 'docker push nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085/2401167-project/anti:latest'
                 }
             }
         }
