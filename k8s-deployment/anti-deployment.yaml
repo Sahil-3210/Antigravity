@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: anti
-        image: nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085/2401167-project/anti:latest
+        image: 127.0.0.1:30085/2401167-project/anti:latest
 
 
         ports:
