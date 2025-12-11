@@ -79,18 +79,18 @@ spec:
         stage('SonarQube Analysis') {
             steps {
                 container('sonar-scanner') {
-                     withCredentials([string(credentialsId: 'sonar-token-2401167', variable: 'SONAR_TOKEN')]) {
-                        sh '''
-                            sonar-scanner \
-                                -Dsonar.projectKey=2401167_anti \
-                                -Dsonar.host.url=http://sonarqube.imcc.com \
-                                -Dsonar.login=$SONAR_TOKEN \
-                                -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
-                                -Dsonar.sources=src \
-                                -Dsonar.tests=test
-                        '''
-                    }
+                    sh '''
+                        sonar-scanner \
+                            -Dsonar.projectKey=2401167_anti \
+                            -Dsonar.host.url=http://sonarqube.imcc.com \
+                            -Dsonar.login=student \
+                            -Dsonar.password=Imccstudent@2025 \
+                            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
+                            -Dsonar.sources=src \
+                            -Dsonar.tests=test
+                    '''
                 }
+
             }
         }
 
