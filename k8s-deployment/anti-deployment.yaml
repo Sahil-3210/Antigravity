@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: anti
+  namespace: "2401167"
+  labels:
+    app: anti
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: anti
+  template:
+    metadata:
+      labels:
+        app: anti
+    spec:
+      containers:
+      - name: anti
+        image: nexus.imcc.com/2401167-project/anti:latest
+
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: anti-service
+  namespace: "2401167"
+
+spec:
+  selector:
+    app: anti
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  type: ClusterIP

@@ -1,55 +1,131 @@
 pipeline {
-    agent any
-
-    environment {
-        // --- CREDENTIALS ---
-        NEXUS_CREDENTIALS_ID = 'nexus-credentials-sahilrandive' 
-        SONAR_TOKEN_ID = 'sonar-token-sahilrandive'
-        
-        // --- CONFIGURATION ---
-        SONAR_HOST_URL = 'http://sonarqube.imcc.com/'
-        NEXUS_REGISTRY = 'nexus.imcc.com' 
-        NEXUS_REPO = 'docker-hosted'
-        
-        // --- UNIQUE APP NAME ---
-        IMAGE_NAME = 'anti-react-app-sahilrandive'
-        TAG = "${env.BUILD_NUMBER}"
+    agent {
+        kubernetes {
+            yaml '''
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+  - name: node
+    image: node:20
+    command:
+    - cat
+    tty: true
+  - name: sonar-scanner
+    image: sonarsource/sonar-scanner-cli
+    command:
+    - cat
+    tty: true
+  - name: kubectl
+    image: bitnami/kubectl:latest
+    command:
+    - cat
+    tty: true
+    securityContext:
+      runAsUser: 0
+    env:
+    - name: KUBECONFIG
+      value: /kube/config
+    volumeMounts:
+    - name: kubeconfig-secret
+      mountPath: /kube/config
+      subPath: kubeconfig
+  - name: dind
+    image: docker:dind
+    securityContext:
+      privileged: true
+    env:
+    - name: DOCKER_TLS_CERTDIR
+      value: ""
+    volumeMounts:
+    - name: docker-config
+      mountPath: /etc/docker/daemon.json
+      subPath: daemon.json
+  volumes:
+  - name: docker-config
+    configMap:
+      name: docker-daemon-config
+  - name: kubeconfig-secret
+    secret:
+      secretName: kubeconfig-secret
+'''
+        }
     }
 
     stages {
-        stage('Full Pipeline') {
+        stage('Install Dependencies & Test') {
             steps {
-                // CRITICAL FIX: Run everything inside the 'dind' container
-                // This container has Docker pre-installed.
+                container('node') {
+                   sh '''
+                       npm install
+                       npm test
+                   '''
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
                 container('dind') {
+                    sh '''
+                        sleep 15
+                        docker build -t anti:latest .
+                        docker image ls
+                    '''
+                }
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                container('sonar-scanner') {
+                     withCredentials([string(credentialsId: 'sonar-token-2401167', variable: 'SONAR_TOKEN')]) {
+                        sh '''
+                            sonar-scanner \
+                                -Dsonar.projectKey=2401167_anti \
+                                -Dsonar.host.url=http://sonarqube.imcc.com \
+                                -Dsonar.login=$SONAR_TOKEN \
+                                -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
+                                -Dsonar.sources=src \
+                                -Dsonar.tests=test
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Login to Docker Registry') {
+            steps {
+                container('dind') {
+                    sh 'docker --version'
+                    sh 'sleep 10'
+                    sh 'docker login nexus.imcc.com -u student -p Imcc@2025'
+                }
+            }
+        }
+
+        stage('Build - Tag - Push') {
+            steps {
+                container('dind') {
+                    sh 'docker tag anti:latest nexus.imcc.com/2401167-project/anti:latest'
+                    sh 'docker push nexus.imcc.com/2401167-project/anti:latest'
+                }
+            }
+        }
+
+
+        stage('Deploy AI Application') {
+            steps {
+                container('kubectl') {
                     script {
-                        // 1. Install Node.js & NPM manually inside this container
-                        // (The 'dind' image is Alpine Linux, so we use apk)
-                        sh 'apk add --no-cache nodejs npm'
-                        
-                        // 2. Install Dependencies & Build
-                        sh 'npm install'
-                        sh 'npm run build'
-                        
-                        // 3. Run SonarQube Scanner
-                        withSonarQubeEnv(installationName: 'SonarQube') { 
-                            sh "npx sonarqube-scanner -Dsonar.projectKey=${IMAGE_NAME} -Dsonar.sources=src -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.login=\$SONAR_AUTH_TOKEN"
-                        }
+                        dir('k8s-deployment') {
+                            sh '''
+                                # Apply all resources in deployment YAML
+                                kubectl apply -f anti-deployment.yaml
 
-                        // 4. Docker Build
-                        // We are already inside the dind container, so 'docker' commands work directly
-                        dockerImage = docker.build("${IMAGE_NAME}:${TAG}")
-
-                        // 5. Push to Nexus
-                        withCredentials([usernamePassword(credentialsId: NEXUS_CREDENTIALS_ID, usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASS')]) {
-                            // Login
-                            sh "docker login -u ${NEXUS_USER} -p ${NEXUS_PASS} ${NEXUS_REGISTRY}"
-                            
-                            // Tag
-                            sh "docker tag ${IMAGE_NAME}:${TAG} ${NEXUS_REGISTRY}/repository/${NEXUS_REPO}/${IMAGE_NAME}:${TAG}"
-                            
-                            // Push
-                            sh "docker push ${NEXUS_REGISTRY}/repository/${NEXUS_REPO}/${IMAGE_NAME}:${TAG}"
+                                # Wait for rollout
+                                kubectl rollout status deployment/anti -n 2401167
+                            '''
                         }
                     }
                 }
